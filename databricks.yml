@@ -1,0 +1,36 @@
+bundle:
+  name: e2e-data-project
+
+include:
+  - Jobs/*.yml
+
+targets:
+  dev:
+    mode: development
+    default: true
+    workspace:
+      host: https://adb-4181970831265458.18.azuredatabricks.net/
+    variables:
+      catalog_name: pedroz_e2edata_dev
+      environment: dev
+
+  prod:
+    mode: production
+    workspace:
+      host: https://adb-4181970831265458.18.azuredatabricks.net/
+    variables:
+      catalog_name: pedroz_e2edata_prod
+      environment: prod
+    
+    # Add any production-specific overrides here
+    run_as:
+      # Specify a service principal for production
+      user_name: ${workspace.current_user.userName}
+
+variables:
+  catalog_name:
+    description: "Name of the Unity Catalog to use"
+    default: "default_catalog"
+  environment:
+    description: "Environment name (dev/prod)"
+    default: "dev" 

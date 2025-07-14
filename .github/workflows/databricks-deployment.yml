@@ -1,0 +1,91 @@
+name: Databricks Deployment
+
+on:
+  push:
+    branches:
+      - dev
+      - main  # Changed from master to main (GitHub's default)
+  pull_request:
+    branches:
+      - dev
+      - main
+
+env:
+  DATABRICKS_HOST: https://adb-4181970831265458.18.azuredatabricks.net/
+  PYTHON_VERSION: '3.9'
+
+jobs:
+  deploy:
+    name: Deploy to Databricks
+    runs-on: ubuntu-latest
+    outputs:
+      target-environment: ${{ steps.environment.outputs.target }}
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          
+      - name: Install Databricks CLI
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
+          
+      - name: Determine target environment
+        id: environment
+        run: |
+          if [ "${{ github.ref }}" = "refs/heads/dev" ]; then
+            echo "target=dev" >> $GITHUB_OUTPUT
+            echo "Deploying to DEV environment"
+          elif [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            echo "target=prod" >> $GITHUB_OUTPUT
+            echo "Deploying to PROD environment"
+          else
+            echo "Branch ${{ github.ref }} is not configured for deployment"
+            exit 1
+          fi
+          
+      - name: Configure Databricks Authentication
+        run: |
+          echo "Setting up Databricks authentication"
+          echo "Host: ${{ env.DATABRICKS_HOST }}"
+          echo "Authentication will use environment variables"
+        env:
+          DATABRICKS_HOST: ${{ env.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+          
+      - name: Deploy Databricks bundle
+        run: |
+          echo "Deploying to ${{ steps.environment.outputs.target }} environment"
+          databricks bundle deploy --target ${{ steps.environment.outputs.target }}
+        env:
+          DATABRICKS_HOST: ${{ env.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+          
+      - name: Mark deployment as successful
+        if: success()
+        run: |
+          echo "Deployment completed successfully to ${{ steps.environment.outputs.target }}"
+          echo "DEPLOYMENT_STATUS=success" >> $GITHUB_ENV
+          
+      - name: Mark deployment as failed
+        if: failure()
+        run: |
+          echo "::error::Deployment failed to ${{ steps.environment.outputs.target }}"
+          echo "DEPLOYMENT_STATUS=failed" >> $GITHUB_ENV
+
+  post-deployment:
+    name: Post-deployment verification
+    runs-on: ubuntu-latest
+    needs: deploy
+    if: success()
+    
+    steps:
+      - name: Display post-deployment information
+        run: |
+          echo "Deployment to ${{ needs.deploy.outputs.target-environment }} completed successfully"
+          echo "You can now run the jobs manually using:"
+          echo "databricks bundle run data_ingestion_job --target ${{ needs.deploy.outputs.target-environment }}" 

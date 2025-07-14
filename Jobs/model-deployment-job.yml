@@ -1,0 +1,82 @@
+resources:
+  jobs:
+    model_deployment_job:
+      name: "Iris Model Deployment Job - ${var.environment}"
+      description: "Job to evaluate, approve, and deploy iris classification model"
+      
+      # Email notifications on failure
+      email_notifications:
+        on_failure:
+          - "pedro.zanlorensi@databricks.com"
+        no_alert_for_skipped_runs: false
+      
+      # Job parameters
+      parameters:
+        - name: "model_name"
+          default: "pedroz_e2edata_${var.environment}.default.iris_model"
+        - name: "model_version"
+          default: "1"
+      
+      # Job tasks with dependencies
+      tasks:
+        - task_key: "model_evaluation"
+          description: "Evaluate model performance before deployment"
+          
+          # Use default serverless compute
+          compute:
+            spec:
+              kind: "serverless"
+          
+          # Notebook task
+          notebook_task:
+            notebook_path: "../Notebooks/2_ModelTrainingAndDeployment/model-evaluation.ipynb"
+            base_parameters:
+              model_name: "{{job.parameters.model_name}}"
+              model_version: "{{job.parameters.model_version}}"
+        
+        - task_key: "model_approval"
+          description: "Approve model for deployment based on evaluation results"
+          depends_on:
+            - task_key: "model_evaluation"
+          
+          # Use default serverless compute
+          compute:
+            spec:
+              kind: "serverless"
+          
+          # Notebook task
+          notebook_task:
+            notebook_path: "../Notebooks/2_ModelTrainingAndDeployment/model-approval.ipynb"
+            base_parameters:
+              model_name: "{{job.parameters.model_name}}"
+              model_version: "{{job.parameters.model_version}}"
+        
+        - task_key: "model_deployment"
+          description: "Deploy approved model to production endpoint"
+          depends_on:
+            - task_key: "model_approval"
+          
+          # Use default serverless compute
+          compute:
+            spec:
+              kind: "serverless"
+          
+          # Notebook task
+          notebook_task:
+            notebook_path: "../Notebooks/2_ModelTrainingAndDeployment/model-deployment.ipynb"
+            base_parameters:
+              model_name: "{{job.parameters.model_name}}"
+              model_version: "{{job.parameters.model_version}}"
+      
+      # Queue configuration for controlled deployment
+      queue:
+        enabled: true
+      
+      # Timeout and retry settings
+      timeout_seconds: 3600
+      max_concurrent_runs: 1
+      
+      # Tags for organization
+      tags:
+        Environment: "${var.environment}"
+        Project: "e2e-data-project"

@@ -1,0 +1,36 @@
+resources:
+  jobs:
+    batch_inference_job:
+      name: "Iris Batch Inference Job - ${var.environment}"
+      description: "Job to run batch inference using the iris classification model"
+      
+      # Email notifications on failure
+      email_notifications:
+        on_failure:
+          - "pedro.zanlorensi@databricks.com"
+        no_alert_for_skipped_runs: false
+      
+      # Job parameters
+      parameters:
+        - name: "catalog_name"
+          default: "${var.catalog_name}"
+      
+      # Job tasks
+      tasks:
+        - task_key: "batch_inference"
+          description: "Run batch inference using the iris classification model"
+          
+          # Use default serverless compute
+          compute:
+            spec:
+              kind: "serverless"
+          
+          # Notebook task
+          notebook_task:
+            notebook_path: "../Notebooks/3_Inference/batch-inference.ipynb"
+            base_parameters:
+              catalog_name: "{{job.parameters.catalog_name}}"
+      
+      # Timeout and retry settings
+      timeout_seconds: 3600
+      max_concurrent_runs: 1 

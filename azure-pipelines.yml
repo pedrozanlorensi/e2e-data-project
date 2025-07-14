@@ -1,0 +1,92 @@
+trigger:
+  branches:
+    include:
+      - dev
+      - master
+
+variables:
+  - name: databricksHost
+    value: 'https://adb-4181970831265458.18.azuredatabricks.net/'
+  - name: pythonVersion
+    value: '3.9'
+
+stages:
+  - stage: Deploy
+    displayName: 'Deploy Databricks Bundle'
+    jobs:
+      - job: DeployJob
+        displayName: 'Deploy to Databricks'
+        pool:
+          vmImage: 'ubuntu-latest'
+        
+        steps:
+          - checkout: self
+            displayName: 'Checkout repository'
+            
+          - task: UsePythonVersion@0
+            displayName: 'Set Python version'
+            inputs:
+              versionSpec: '$(pythonVersion)'
+              
+          - script: |
+              curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
+            displayName: 'Install Databricks CLI'
+            
+          - script: |
+              if [ "$(Build.SourceBranch)" = "refs/heads/dev" ]; then
+                echo "##vso[task.setvariable variable=targetEnvironment]dev"
+                echo "Deploying to DEV environment"
+              elif [ "$(Build.SourceBranch)" = "refs/heads/master" ]; then
+                echo "##vso[task.setvariable variable=targetEnvironment]prod"
+                echo "Deploying to PROD environment"
+              else
+                echo "Branch $(Build.SourceBranch) is not configured for deployment"
+                exit 1
+              fi
+            displayName: 'Determine target environment'
+            
+          - script: |
+              echo "Setting up Databricks authentication"
+              echo "Host: $(databricksHost)"
+              echo "Authentication will use environment variables"
+            displayName: 'Configure Databricks Authentication'
+            env:
+              DATABRICKS_HOST: $(databricksHost)
+              DATABRICKS_TOKEN: $(DATABRICKS_TOKEN)
+            
+          - script: |
+              echo "Deploying to $(targetEnvironment) environment"
+              databricks bundle deploy --target $(targetEnvironment)
+            displayName: 'Deploy Databricks bundle'
+            env:
+              DATABRICKS_HOST: $(databricksHost)
+              DATABRICKS_TOKEN: $(DATABRICKS_TOKEN)
+            
+          - script: |
+              echo "Deployment completed successfully to $(targetEnvironment)"
+              echo "##vso[task.setvariable variable=deploymentStatus]success"
+            displayName: 'Mark deployment as successful'
+            condition: succeeded()
+            
+          - script: |
+              echo "##vso[task.logissue type=error]Deployment failed to $(targetEnvironment)"
+              echo "##vso[task.setvariable variable=deploymentStatus]failed"
+            displayName: 'Mark deployment as failed'
+            condition: failed()
+
+  - stage: PostDeployment
+    displayName: 'Post-Deployment Actions'
+    dependsOn: Deploy
+    condition: succeeded()
+    jobs:
+      - job: PostDeploymentJob
+        displayName: 'Post-deployment verification'
+        pool:
+          vmImage: 'ubuntu-latest'
+        
+        steps:
+          - script: |
+              echo "Deployment to $(targetEnvironment) completed successfully"
+              echo "You can now run the jobs manually using:"
+              echo "databricks bundle run data_ingestion_job --target $(targetEnvironment)"
+            displayName: 'Display post-deployment information' 
