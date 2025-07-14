@@ -4,11 +4,11 @@ on:
   push:
     branches:
       - dev
-      - main  # Changed from master to main (GitHub's default)
+      - master
   pull_request:
     branches:
       - dev
-      - main
+      - master
 
 env:
   DATABRICKS_HOST: https://adb-4181970831265458.18.azuredatabricks.net/
@@ -32,7 +32,7 @@ jobs:
           
       - name: Install Databricks CLI
         run: |
-          curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
+          curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/master/install.sh | sh
           
       - name: Determine target environment
         id: environment
@@ -40,7 +40,7 @@ jobs:
           if [ "${{ github.ref }}" = "refs/heads/dev" ]; then
             echo "target=dev" >> $GITHUB_OUTPUT
             echo "Deploying to DEV environment"
-          elif [ "${{ github.ref }}" = "refs/heads/main" ]; then
+          elif [ "${{ github.ref }}" = "refs/heads/master" ]; then
             echo "target=prod" >> $GITHUB_OUTPUT
             echo "Deploying to PROD environment"
           else
