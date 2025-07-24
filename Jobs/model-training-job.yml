@@ -1,8 +1,8 @@
 resources:
   jobs:
-    data_ingestion_job:
-      name: "Iris Data Ingestion Job - ${var.environment}"
-      description: "Job to ingest iris dataset from sklearn into Unity Catalog"
+    model_training_job:
+      name: "Iris Model Training job - ${var.environment}"
+      description: "Job to train iris classification model"
       
       # Email notifications on failure
       email_notifications:
@@ -15,9 +15,9 @@ resources:
         - name: "catalog_name"
           default: "${var.catalog_name}"
       
-      # Define a shared job cluster for data preprocessing
+      # Define a shared job cluster for model training
       job_clusters:
-        - job_cluster_key: "preprocessing_cluster"
+        - job_cluster_key: "training_cluster"
           new_cluster:
             autoscale:
               min_workers: 1
@@ -27,19 +27,19 @@ resources:
             custom_tags:
               Environment: "${var.environment}"
               Project: "e2e-data-project"
-              Purpose: "data-preprocessing"
+              Purpose: "model-training"
 
       # Job tasks
       tasks:
-        - task_key: "ingest_data"
-          description: "Ingest iris dataset into Unity Catalog"
+        - task_key: "train_model"
+          description: "Train iris classification model"
           
           # Reference the shared job cluster
-          job_cluster_key: "preprocessing_cluster"
+          job_cluster_key: "training_cluster"
           
           # Notebook task
           notebook_task:
-            notebook_path: "../Notebooks/1_DataPreprocessing/data-ingestion.ipynb"
+            notebook_path: "../Notebooks/2_ModelTrainingAndDeployment/model-training.ipynb"
             base_parameters:
               catalog_name: "{{job.parameters.catalog_name}}"
       
