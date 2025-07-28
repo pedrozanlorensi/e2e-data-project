@@ -31,7 +31,7 @@ Having a *Continuous Deployment (CD)* pipeline enabled means that if you make an
 
 <img src="./docs_figures/cicd_process.png" alt="CI/CD Process" width="600"/>  
 
-**Wrap up:** as a part of this demo, you will have created notebooks and jobs for a fictional MLOps end-to-end pipeline. By connecting your dev and prod workspaces and making your CI/CD setup, you will be able to set up automatic updates to your Dev and Prod environments with a click of a button! Below, you can check the list of jobs that will get created in the demo, which can be easily filtered by using the tag **Project**: "e2e-data-project".  
+**Wrap up:** as a part of this demo, you have created notebooks and jobs for a fictional MLOps end-to-end pipeline. By connecting your dev and prod workspaces and preparing your CI/CD setup, you will be able to deploy automatic updates to your Dev and Prod environments with a click of a button! Below, you can check the list of jobs that will get created in the demo, which can be easily filtered by using the tag **Project**: "e2e-data-project".  
 
 <img src="./docs_figures/jobs_list.png" alt="CI/CD Process" width="600"/>  
 
