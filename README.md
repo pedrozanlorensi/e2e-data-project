@@ -34,8 +34,19 @@ Having a *Continuous Deployment (CD)* pipeline enabled means that if you make an
 **Wrap up:** as a part of this demo, you have created notebooks and jobs for a fictional MLOps end-to-end pipeline. By connecting your dev and prod workspaces and preparing your CI/CD setup, you will be able to deploy automatic updates to your Dev and Prod environments with a click of a button! Below, you can check the list of jobs that will get created in the demo, which can be easily filtered by using the tag **Project**: "e2e-data-project".  
 
 <img src="./docs_figures/jobs_list.png" alt="CI/CD Process" width="600"/>  
+  
+  
+**Notes**: 
+ - If you want to clone this Repo to reproduce it on your end, don't forget to change the **host** and **catalog_name** from the [databricks.yml](databricks.yml) file. If you are using GitHub Actions, you also need to add a Secret called **DATABRICKS_TOKEN** with your PAT token and update the **DATABRICKS_HOST** in the [.github/workflows/databricks-deployment.yml](.github/workflows/databricks-deployment.yml) file; and if you use Azure DevOps, then you have to add a pipeline secret called **DATABRICKS_TOKEN** and update the **DATABRICKS_HOST** in the [azure-pipelines.yml](azure-pipelines.yml) file. 
+ - For this simple tutorial, PAT authentication was applied, but if you have other security requirements, Databricks does support multiple authentication options for Databricks Asset Bundles. Here you can learn more: [Authentication for Databricks Asset Bundles
+](https://docs.databricks.com/aws/en/dev-tools/bundles/authentication).
 
-**Learn more**: another common setting that was not emphasized in this demo regards the possibility of configuring permissions, such as "who should be able to RUN/MANAGE/VIEW this job?". I recommend reviewing [this](https://docs.databricks.com/aws/en/dev-tools/bundles/permissions) documentation to learn how you can set permissions for resources using Databricks Asset Bundles.
+**Learn more**: 
+ - Another common setting that was not emphasized in this demo regards the possibility of configuring permissions, such as "who should be able to RUN/MANAGE/VIEW this job?". I recommend reviewing [this](https://docs.databricks.com/aws/en/dev-tools/bundles/permissions) documentation to learn how you can set permissions for resources using Databricks Asset Bundles.
+ - Check out the [Big Book of MLOps](https://www.databricks.com/resources/ebook/the-big-book-of-mlops).
+ - Here you can find more info on how to manage different environments for MLOps: [MLOps Workflows](https://docs.databricks.com/aws/en/machine-learning/mlops/mlops-workflow).
+ - If you don't want to retrain your models in each environment, you can **promote** your models across environments. Check out this documentation for more info: [Promote a model across environments](https://docs.databricks.com/aws/en/machine-learning/manage-model-lifecycle#promote-a-model-across-environments).  
+
 
 Let us know if you need support in your MLOps journey! 
 
