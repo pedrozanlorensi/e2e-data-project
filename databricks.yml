@@ -2,7 +2,7 @@ bundle:
   name: e2e-data-project
 
 include:
-  - Jobs/*.yml
+  - resources/*.yml
 
 targets:
   dev:

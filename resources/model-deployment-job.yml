@@ -19,7 +19,7 @@ resources:
       
       # Job tasks with dependencies
       tasks:
-        - task_key: "model_evaluation"
+        - task_key: "evaluation"
           description: "Evaluate model performance before deployment"
           
           # Notebook task
@@ -29,10 +29,10 @@ resources:
               model_name: "{{job.parameters.model_name}}"
               model_version: "{{job.parameters.model_version}}"
         
-        - task_key: "model_approval"
+        - task_key: "approval"
           description: "Approve model for deployment based on evaluation results"
           depends_on:
-            - task_key: "model_evaluation"
+            - task_key: "evaluation"
           
           # Notebook task
           notebook_task:
@@ -41,10 +41,10 @@ resources:
               model_name: "{{job.parameters.model_name}}"
               model_version: "{{job.parameters.model_version}}"
         
-        - task_key: "model_deployment"
+        - task_key: "deployment"
           description: "Deploy approved model to production endpoint"
           depends_on:
-            - task_key: "model_approval"
+            - task_key: "approval"
           
           # Notebook task
           notebook_task:
