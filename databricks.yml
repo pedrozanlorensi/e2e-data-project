@@ -22,7 +22,7 @@ targets:
       catalog_name: pedroz_e2edata_prod
       environment: prod
     
-    # Add any production-specific overrides here
+    # Add any production-specific overrides here 
     run_as:
       # Specify a service principal for production
       user_name: ${workspace.current_user.userName}
