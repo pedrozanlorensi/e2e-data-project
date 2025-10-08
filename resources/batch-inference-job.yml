@@ -47,7 +47,7 @@ resources:
       timeout_seconds: 3600
       max_concurrent_runs: 1 
 
-    # Tags for organization
+      # Tags for organization
       tags:
         Environment: "${var.environment}"
         Project: "e2e-data-project" 
