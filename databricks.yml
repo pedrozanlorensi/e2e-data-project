@@ -49,11 +49,6 @@ targets:
       catalog_name: pedroz_e2edata_prod
       environment: prod
     
-    # Add any production-specific overrides here
-    run_as:
-      # Use service principal for production
-      service_principal_name: ${var.service_principal_application_id}
-    
     # Override permissions for prod environment (only PowerUsers group)
     resources:
       jobs:
@@ -81,6 +76,3 @@ variables:
   environment:
     description: "Environment name (dev/prod)"
     default: "dev"
-  service_principal_application_id:
-    description: "Service Principal Application ID for authentication"
-    default: "${env.DATABRICKS_CLIENT_ID}" 
