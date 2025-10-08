@@ -13,6 +13,33 @@ targets:
     variables:
       catalog_name: pedroz_e2edata_dev
       environment: dev
+    # Override permissions for dev environment
+    resources:
+      jobs:
+        data_ingestion_job:
+          permissions:
+            - level: "CAN_MANAGE"
+              user_name: "power.user@address.com"
+            - level: "CAN_MANAGE_RUN"
+              user_name: "development.user@address.com"
+        model_training_job:
+          permissions:
+            - level: "CAN_MANAGE"
+              user_name: "power.user@address.com"
+            - level: "CAN_MANAGE_RUN"
+              user_name: "development.user@address.com"
+        model_deployment_job:
+          permissions:
+            - level: "CAN_MANAGE"
+              user_name: "power.user@address.com"
+            - level: "CAN_MANAGE_RUN"
+              user_name: "development.user@address.com"
+        batch_inference_job:
+          permissions:
+            - level: "CAN_MANAGE"
+              user_name: "power.user@address.com"
+            - level: "CAN_MANAGE_RUN"
+              user_name: "development.user@address.com"
 
   prod:
     mode: production
@@ -24,8 +51,28 @@ targets:
     
     # Add any production-specific overrides here
     run_as:
-      # Specify a service principal for production
-      user_name: ${workspace.current_user.userName}
+      # Use service principal for production
+      service_principal_name: ${var.service_principal_application_id}
+    
+    # Override permissions for prod environment (only power user)
+    resources:
+      jobs:
+        data_ingestion_job:
+          permissions:
+            - level: "CAN_MANAGE"
+              user_name: "power.user@address.com"
+        model_training_job:
+          permissions:
+            - level: "CAN_MANAGE"
+              user_name: "power.user@address.com"
+        model_deployment_job:
+          permissions:
+            - level: "CAN_MANAGE"
+              user_name: "power.user@address.com"
+        batch_inference_job:
+          permissions:
+            - level: "CAN_MANAGE"
+              user_name: "power.user@address.com"
 
 variables:
   catalog_name:
@@ -33,4 +80,7 @@ variables:
     default: "default_catalog"
   environment:
     description: "Environment name (dev/prod)"
-    default: "dev" 
+    default: "dev"
+  service_principal_application_id:
+    description: "Service Principal Application ID for authentication"
+    default: "${env.DATABRICKS_CLIENT_ID}" 

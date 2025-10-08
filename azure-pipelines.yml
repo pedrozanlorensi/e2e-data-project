@@ -48,11 +48,21 @@ stages:
           - script: |
               echo "Setting up Databricks authentication"
               echo "Host: $(databricksHost)"
-              echo "Authentication will use environment variables"
+              echo "Authentication will use Service Principal"
             displayName: 'Configure Databricks Authentication'
             env:
               DATABRICKS_HOST: $(databricksHost)
-              DATABRICKS_TOKEN: $(DATABRICKS_TOKEN)
+              DATABRICKS_CLIENT_ID: $(DATABRICKS_CLIENT_ID)
+              DATABRICKS_CLIENT_SECRET: $(DATABRICKS_CLIENT_SECRET)
+            
+          - script: |
+              echo "Validating Databricks bundle configuration for $(targetEnvironment) environment"
+              databricks bundle validate --target $(targetEnvironment)
+            displayName: 'Validate Databricks bundle'
+            env:
+              DATABRICKS_HOST: $(databricksHost)
+              DATABRICKS_CLIENT_ID: $(DATABRICKS_CLIENT_ID)
+              DATABRICKS_CLIENT_SECRET: $(DATABRICKS_CLIENT_SECRET)
             
           - script: |
               echo "Deploying to $(targetEnvironment) environment"
@@ -60,7 +70,8 @@ stages:
             displayName: 'Deploy Databricks bundle'
             env:
               DATABRICKS_HOST: $(databricksHost)
-              DATABRICKS_TOKEN: $(DATABRICKS_TOKEN)
+              DATABRICKS_CLIENT_ID: $(DATABRICKS_CLIENT_ID)
+              DATABRICKS_CLIENT_SECRET: $(DATABRICKS_CLIENT_SECRET)
             
           - script: |
               echo "Deployment completed successfully to $(targetEnvironment)"

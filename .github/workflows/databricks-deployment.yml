@@ -48,10 +48,20 @@ jobs:
         run: |
           echo "Setting up Databricks authentication"
           echo "Host: ${{ env.DATABRICKS_HOST }}"
-          echo "Authentication will use environment variables"
+          echo "Authentication will use Service Principal"
         env:
           DATABRICKS_HOST: ${{ env.DATABRICKS_HOST }}
-          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+          DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
+          DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
+          
+      - name: Validate Databricks bundle
+        run: |
+          echo "Validating Databricks bundle configuration for ${{ steps.environment.outputs.target }} environment"
+          databricks bundle validate --target ${{ steps.environment.outputs.target }}
+        env:
+          DATABRICKS_HOST: ${{ env.DATABRICKS_HOST }}
+          DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
+          DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
           
       - name: Deploy Databricks bundle
         run: |
@@ -59,7 +69,8 @@ jobs:
           databricks bundle deploy --target ${{ steps.environment.outputs.target }}
         env:
           DATABRICKS_HOST: ${{ env.DATABRICKS_HOST }}
-          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+          DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
+          DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
           
       - name: Mark deployment as successful
         if: success()
