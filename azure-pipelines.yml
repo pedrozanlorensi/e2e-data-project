@@ -56,6 +56,15 @@ stages:
               DATABRICKS_CLIENT_SECRET: $(DATABRICKS_CLIENT_SECRET)
             
           - script: |
+              echo "Logging in to Databricks using Service Principal"
+              databricks auth login --host $(databricksHost)
+            displayName: 'Authenticate with Databricks'
+            env:
+              DATABRICKS_HOST: $(databricksHost)
+              DATABRICKS_CLIENT_ID: $(DATABRICKS_CLIENT_ID)
+              DATABRICKS_CLIENT_SECRET: $(DATABRICKS_CLIENT_SECRET)
+            
+          - script: |
               echo "Validating Databricks bundle configuration for $(targetEnvironment) environment"
               databricks bundle validate --target $(targetEnvironment)
             displayName: 'Validate Databricks bundle'

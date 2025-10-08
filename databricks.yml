@@ -19,27 +19,27 @@ targets:
         data_ingestion_job:
           permissions:
             - level: "CAN_MANAGE"
-              user_name: "power.user@address.com"
+              group_name: "PowerUsers"
             - level: "CAN_MANAGE_RUN"
-              user_name: "development.user@address.com"
+              group_name: "Developers"
         model_training_job:
           permissions:
             - level: "CAN_MANAGE"
-              user_name: "power.user@address.com"
+              group_name: "PowerUsers"
             - level: "CAN_MANAGE_RUN"
-              user_name: "development.user@address.com"
+              group_name: "Developers"
         model_deployment_job:
           permissions:
             - level: "CAN_MANAGE"
-              user_name: "power.user@address.com"
+              group_name: "PowerUsers"
             - level: "CAN_MANAGE_RUN"
-              user_name: "development.user@address.com"
+              group_name: "Developers"
         batch_inference_job:
           permissions:
             - level: "CAN_MANAGE"
-              user_name: "power.user@address.com"
+              group_name: "PowerUsers"
             - level: "CAN_MANAGE_RUN"
-              user_name: "development.user@address.com"
+              group_name: "Developers"
 
   prod:
     mode: production
@@ -54,25 +54,25 @@ targets:
       # Use service principal for production
       service_principal_name: ${var.service_principal_application_id}
     
-    # Override permissions for prod environment (only power user)
+    # Override permissions for prod environment (only PowerUsers group)
     resources:
       jobs:
         data_ingestion_job:
           permissions:
             - level: "CAN_MANAGE"
-              user_name: "power.user@address.com"
+              group_name: "PowerUsers"
         model_training_job:
           permissions:
             - level: "CAN_MANAGE"
-              user_name: "power.user@address.com"
+              group_name: "PowerUsers"
         model_deployment_job:
           permissions:
             - level: "CAN_MANAGE"
-              user_name: "power.user@address.com"
+              group_name: "PowerUsers"
         batch_inference_job:
           permissions:
             - level: "CAN_MANAGE"
-              user_name: "power.user@address.com"
+              group_name: "PowerUsers"
 
 variables:
   catalog_name:
