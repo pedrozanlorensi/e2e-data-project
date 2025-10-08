@@ -54,15 +54,6 @@ jobs:
           DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
           DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
           
-      - name: Authenticate with Databricks
-        run: |
-          echo "Logging in to Databricks using Service Principal"
-          databricks auth login --host ${{ env.DATABRICKS_HOST }}
-        env:
-          DATABRICKS_HOST: ${{ env.DATABRICKS_HOST }}
-          DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
-          DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
-          
       - name: Validate Databricks bundle
         run: |
           echo "Validating Databricks bundle configuration for ${{ steps.environment.outputs.target }} environment"
