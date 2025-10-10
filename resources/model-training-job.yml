@@ -35,8 +35,8 @@ resources:
         - task_key: "train_model"
           description: "Train iris classification model"
           
-          # Reference the shared job cluster
-          job_cluster_key: "training_cluster"
+          # Reference the shared job cluster if you want to use it
+          # job_cluster_key: "training_cluster"
           
           # Notebook task
           notebook_task:

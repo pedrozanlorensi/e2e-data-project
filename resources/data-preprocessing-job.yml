@@ -35,8 +35,8 @@ resources:
         - task_key: "ingest_data"
           description: "Ingest iris dataset into Unity Catalog"
           
-          # Reference the shared job cluster
-          job_cluster_key: "preprocessing_cluster"
+          # Reference the shared job cluster if you want to use it
+          #job_cluster_key: "preprocessing_cluster"
           
           # Notebook task
           notebook_task:
