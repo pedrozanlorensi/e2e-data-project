@@ -13,7 +13,7 @@ resources:
       # Job parameters
       parameters:
         - name: "model_name"
-          default: "pedroz_e2edata_${var.environment}.default.iris_model"
+          default: "${var.catalog_name}.default.iris_model"
         - name: "model_version"
           default: "1"
       
@@ -24,7 +24,7 @@ resources:
           
           # Notebook task
           notebook_task:
-            notebook_path: "../Notebooks/2_ModelTrainingAndDeployment/model-evaluation.ipynb"
+            notebook_path: "../Notebooks/2_ModelTrainingAndDeployment/ModelDeployment/model-evaluation.ipynb"
             base_parameters:
               model_name: "{{job.parameters.model_name}}"
               model_version: "{{job.parameters.model_version}}"
@@ -36,7 +36,7 @@ resources:
           
           # Notebook task
           notebook_task:
-            notebook_path: "../Notebooks/2_ModelTrainingAndDeployment/model-approval.ipynb"
+            notebook_path: "../Notebooks/2_ModelTrainingAndDeployment/ModelDeployment/model-approval.ipynb"
             base_parameters:
               model_name: "{{job.parameters.model_name}}"
               model_version: "{{job.parameters.model_version}}"
@@ -48,7 +48,7 @@ resources:
           
           # Notebook task
           notebook_task:
-            notebook_path: "../Notebooks/2_ModelTrainingAndDeployment/model-deployment.ipynb"
+            notebook_path: "../Notebooks/2_ModelTrainingAndDeployment/ModelDeployment/model-deployment.ipynb"
             base_parameters:
               model_name: "{{job.parameters.model_name}}"
               model_version: "{{job.parameters.model_version}}"
