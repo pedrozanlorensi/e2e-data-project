@@ -48,7 +48,8 @@ Having a *Continuous Deployment (CD)* pipeline enabled means that if you make an
  - If you don't want to retrain your models in each environment, you can **promote** your models across environments. Check out this documentation for more info: [Promote a model across environments](https://docs.databricks.com/aws/en/machine-learning/manage-model-lifecycle#promote-a-model-across-environments).  
  - This is a more advanced template for MLOps, called the "MLOps Stacks" template: [MLOps Stacks: model development process as code](https://docs.databricks.com/aws/en/machine-learning/mlops/mlops-stacks). It may be worth checking it as you mature and grow in your MLOps journey!
 
+**Q&A**:
+- **Can I specify who I want the approvers to be in my deployment job?** Yes, you restrict who has permissions to **APPLY TAGs** and also set a [governed tag policy](https://docs.databricks.com/aws/en/admin/governed-tags/) so only certain people are allowed to set a specific tag value (in this case, it will be the "approval" tag).
+- **Can I get notified when there's a model to approve?** Yes, you can set up your deployment jobs to send an email notification upon job failures to the approvers. 
 
 Let us know if you need support in your MLOps journey! 
-
-Contacts: pedro.zanlorensi@databricks.com
