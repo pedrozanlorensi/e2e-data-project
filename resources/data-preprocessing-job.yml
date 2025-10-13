@@ -15,27 +15,28 @@ resources:
         - name: "catalog_name"
           default: "${var.catalog_name}"
       
-      # Define a shared job cluster for data preprocessing
-      job_clusters:
-        - job_cluster_key: "preprocessing_cluster"
-          new_cluster:
-            autoscale:
-              min_workers: 1
-              max_workers: 4
-            spark_version: "15.4.x-scala2.12"
-            node_type_id: "Standard_D4s_v3"
-            custom_tags:
-              Environment: "${var.environment}"
-              Project: "e2e-data-project"
-              Purpose: "data-preprocessing"
+      # If you want to define a shared job cluster for data preprocessing,
+      # uncomment the following section - this is an example that works for Azure Databricks
+      # job_clusters:
+      #   - job_cluster_key: "preprocessing_cluster"
+      #     new_cluster:
+      #       autoscale:
+      #         min_workers: 1
+      #         max_workers: 4
+      #       spark_version: "15.4.x-scala2.12"
+      #       node_type_id: "Standard_D4s_v3"
+      #       custom_tags:
+      #         Environment: "${var.environment}"
+      #         Project: "e2e-data-project"
+      #         Purpose: "data-preprocessing"
 
       # Job tasks
       tasks:
         - task_key: "ingest_data"
           description: "Ingest iris dataset into Unity Catalog"
           
-          # Reference the shared job cluster
-          job_cluster_key: "preprocessing_cluster"
+          # Reference the shared job cluster if you want to use it
+          #job_cluster_key: "preprocessing_cluster"
           
           # Notebook task
           notebook_task:
