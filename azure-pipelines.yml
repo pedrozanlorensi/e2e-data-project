@@ -6,7 +6,7 @@ trigger:
 
 variables:
   - name: databricksHost
-    value: 'https://adb-4181970831265458.18.azuredatabricks.net/'
+    value: 'https://e2-demo-field-eng.cloud.databricks.com/'
   - name: pythonVersion
     value: '3.9'
 
