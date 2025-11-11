@@ -7,8 +7,11 @@ on:
       - master
 
 env:
-  DATABRICKS_HOST: https://adb-4181970831265458.18.azuredatabricks.net/
+  DATABRICKS_HOST: https://e2-demo-field-eng.cloud.databricks.com/
   PYTHON_VERSION: '3.9'
+  DATABRICKS_CLIENT_ID: 'ddcbd978-53e5-4cee-895f-e666b2aa34b5'
+  DATABRICKS_CLIENT_SECRET: 'dose1b269dcc4d113fbcc63db0215565030b'
+  
 
 jobs:
   deploy:
