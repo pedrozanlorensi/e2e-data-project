@@ -8,7 +8,7 @@ on:
 
 env:
   DATABRICKS_HOST: https://dbc-0c529907-42cd.cloud.databricks.com/
-  PYTHON_VERSION: '3.9'  
+  PYTHON_VERSION: '3.9'
 
 jobs:
   deploy:
@@ -46,7 +46,7 @@ jobs:
           
       - name: Configure Databricks Authentication
         run: |
-          echo "Setting up Databricks authentication"
+          echo "Setting up Databricks authentication now"
           echo "Host: ${{ env.DATABRICKS_HOST }}"
           echo "Authentication will use Service Principal"
         env:
